@@ -8,10 +8,7 @@ Exchange2007MBtoMEU.ps1
 [CmdletBinding()]
 param (
 	[Parameter( Mandatory=$true)]
-	[string]$DomainController,
-
-	[Parameter( Mandatory=$false)]
-	[switch]$Log
+	[string]$DomainController
 	)
 
 
@@ -19,11 +16,9 @@ param (
 # Variables
 #...................................
 
-$scriptname = $MyInvocation.MyCommand.Name
 $now = Get-Date
 
-$myDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$logfile = "$myDir\$scriptname.log"
+$logfile = "Exchange2007MBtoMEU.log"
 
 
 #...................................
@@ -31,7 +26,7 @@ $logfile = "$myDir\$scriptname.log"
 #...................................
 
 $logstring0 = "====================================="
-$logstring1 = " $scriptname"
+$logstring1 = " Exchange2007MBtoMEU.ps1"
 $logstring2 = "You must supply a value for the -DomainController switch."
 $logstring2 = "The cloud.csv file was not found in the current directory."
 
@@ -59,7 +54,7 @@ Function Write-Logfile()
 }
 
 
-function Main
+function Main()
 {
 	#Script Logic flow
 	#1. Pull User Info from cloud.csv file in the current directory
@@ -75,7 +70,7 @@ function Main
 	if($DomainController -eq [String]::Empty)
 	{
 		Write-Host $logstring2 -ForegroundColor Red
-        if ($Log) {Write-Logfile $logstring2}
+        Write-Logfile $logstring2
 		Exit
 	}
 	
@@ -86,7 +81,7 @@ function Main
     else
     {
         Write-Host $logstring3 -ForegroundColor Red
-        if ($Log) {Write-Logfile $logstring3}
+        Write-Logfile $logstring3
 		Exit
     }
 	
@@ -94,11 +89,11 @@ function Main
 	{
 		$tmpstring = "Processing user $($User.OnPremiseEmailAddress)"
         Write-Host $tmpstring -ForegroundColor Green
-        if ($Log) {Write-Logfile $tmpstring}
+        Write-Logfile $tmpstring
 
         $tmpstring = "Calling LookupADInformationFromSMTPAddress"
 		Write-Host $tmpstring -ForegroundColor Green
-        if ($Log) {Write-Logfile $tmpstring}
+        Write-Logfile $tmpstring
 
 		$UserInfo = LookupADInformationFromSMTPAddress($User)
 		
@@ -122,7 +117,7 @@ function Main
 			
             $tmpstring = "Adding $X500Proxy to EmailAddresses"
             Write-Host $tmpstring -ForegroundColor Green
-            if ($Log) {Write-Logfile $tmpstring}
+            Write-Logfile $tmpstring
 
 			$UserInfo.ProxyAddresses += $X500Proxy
 		}
@@ -132,7 +127,7 @@ function Main
 
             $tmpstring = "Adding $X500Proxy to EmailAddresses"
 			Write-Host $tmpstring -ForegroundColor Green
-            if ($Log) {Write-Logfile $tmpstring}
+            Write-Logfile $tmpstring
 
 			$UserInfo.ProxyAddresses += $X500Proxy
 		}
@@ -140,25 +135,25 @@ function Main
 		#Disable Mailbox
 		$tmpstring = "Disabling Mailbox"
         Write-Host $tmpstring -ForegroundColor Green
-        if ($Log) {Write-Logfile $tmpstring}
+        Write-Logfile $tmpstring
 		Disable-Mailbox -Identity $UserInfo.OnPremiseEmailAddress -DomainController $DomainController -Confirm:$false
 		
 		#Mail Enable
 		$tmpstring = "Enabling Mailbox"
         Write-Host $tmpstring -ForegroundColor Green
-        if ($Log) {Write-Logfile $tmpstring}
+        Write-Logfile $tmpstring
 		Enable-MailUser  -Identity $UserInfo.Identity -ExternalEmailAddress $UserInfo.CloudEmailAddress -DomainController $DomainController
 		
 		#Disable RUS
         $tmpstring = "Disabling RUS"		
         Write-Host $tmpstring -ForegroundColor Green
-        if ($Log) {Write-Logfile $tmpstring}
+        Write-Logfile $tmpstring
 		Set-MailUser -Identity $UserInfo.Identity -EmailAddressPolicyEnabled $false -DomainController $DomainController
 		
 		#Add Proxies and Mail
 		$tmpstring = "Adding EmailAddresses and WindowsEmailAddress"
         Write-Host $tmpstring -ForegroundColor Green
-        if ($Log) {Write-Logfile $tmpstring}
+        Write-Logfile $tmpstring
 		Set-MailUser -Identity $UserInfo.Identity -EmailAddresses $UserInfo.ProxyAddresses -WindowsEmailAddress $UserInfo.Mail -DomainController $DomainController
 		
 		#Set Mailbox GUID.  Need to do this via S.DS as Set-MailUser doesn't expose this property.
@@ -169,12 +164,13 @@ function Main
 		
         $tmpstring = "Setting Mailbox GUID $($UserInfo.MailboxGUID)"
         Write-Host $tmpstring -ForegroundColor Green
-        if ($Log) {Write-Logfile $tmpstring}
+        Write-Logfile $tmpstring
 		
         $ADUser.psbase.CommitChanges()
 		
         $tmpstring = "Migration Complete for $($UserInfo.OnPremiseEmailAddress)"
 		Write-Host $tmpstring -ForegroundColor Green
+        Write-Logfile $tmpstring
 		Write-Host ""
 		Write-Host ""
 	}
@@ -217,22 +213,22 @@ function LookupADInformationFromSMTPAddress($CSV)
 
 #Log file is overwritten each time the script is run to avoid
 #very large log files from growing over time
-if ($Log) {
-	$timestamp = Get-Date -DisplayHint Time
-	"$timestamp $logstring0" | Out-File $logfile
-	Write-Logfile $logstring1
-	Write-Logfile "  $now"
-	Write-Logfile $logstring0
-}
+
+$timestamp = Get-Date -DisplayHint Time
+"$timestamp $logstring0" | Out-File $logfile
+Write-Logfile $logstring1
+Write-Logfile "  $now"
+Write-Logfile $logstring0
+
 
 Write-Host $initstring0
-if ($Log) {Write-Logfile $initstring0}
+Write-Logfile $initstring0
 
 #Add Exchange 2007 snapin if not already loaded in the PowerShell session
 if (!(Get-PSSnapin | where {$_.Name -eq "Microsoft.Exchange.Management.PowerShell.Admin"}))
 {
 	Write-Verbose $initstring1
-	if ($Log) {Write-Logfile $initstring1}
+	Write-Logfile $initstring1
 	try
 	{
 		Add-PSSnapin Microsoft.Exchange.Management.PowerShell.Admin -ErrorAction STOP
@@ -241,21 +237,10 @@ if (!(Get-PSSnapin | where {$_.Name -eq "Microsoft.Exchange.Management.PowerShel
 	{
 		#Snapin was not loaded
 		Write-Verbose $initstring2
-		if ($Log) {Write-Logfile $initstring2}
+		Write-Logfile $initstring2
 		Write-Warning $_.Exception.Message
 		EXIT
 	}
-	. $env:ExchangeInstallPath\bin\RemoteExchange.ps1
-	Connect-ExchangeServer -auto -AllowClobber
-}
-
-
-#Set scope to include entire forest
-Write-Verbose $initstring3
-if ($Log) {Write-Logfile $initstring3}
-if (!(Get-ADServerSettings).ViewEntireForest)
-{
-	Set-ADServerSettings -ViewEntireForest $true -WarningAction SilentlyContinue
 }
 
 
@@ -271,10 +256,9 @@ Main
 # End
 #...................................
 
-if ($Log) {
-	$timestamp = Get-Date -DisplayHint Time
-	"$timestamp $logstring0" | Out-File $logfile
-	Write-Logfile $logstring1
-	Write-Logfile "  $now"
-	Write-Logfile $logstring0
-}
+
+$timestamp = Get-Date -DisplayHint Time
+"$timestamp $logstring0" | Out-File $logfile -Append
+Write-Logfile $logstring1
+Write-Logfile "  $now"
+Write-Logfile $logstring0
