@@ -35,6 +35,17 @@ $logstring1 = " $scriptname"
 $logstring2 = "You must supply a value for the -DomainController switch."
 $logstring2 = "The cloud.csv file was not found in the current directory."
 
+
+#...................................
+# Initialization Strings
+#...................................
+
+$initstring0 = "Initializing..."
+$initstring1 = "Loading the Exchange Server PowerShell snapin"
+$initstring2 = "The Exchange Server PowerShell snapin did not load."
+$initstring3 = "Setting scope to entire forest"
+
+
 #...................................
 # Functions
 #...................................
