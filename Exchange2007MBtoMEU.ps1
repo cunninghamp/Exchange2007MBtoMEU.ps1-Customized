@@ -154,6 +154,8 @@ function Main()
 		$tmpstring = "Adding EmailAddresses and WindowsEmailAddress"
         Write-Host $tmpstring -ForegroundColor Green
         Write-Logfile $tmpstring
+        Write-Logfile $UserInfo.ProxyAddresses
+        Write-Logfile $UserInfo.Mail
 		Set-MailUser -Identity $UserInfo.Identity -EmailAddresses $UserInfo.ProxyAddresses -WindowsEmailAddress $UserInfo.Mail -DomainController $DomainController
 		
 		#Set Mailbox GUID.  Need to do this via S.DS as Set-MailUser doesn't expose this property.
