@@ -229,13 +229,13 @@ Write-Host $initstring0
 if ($Log) {Write-Logfile $initstring0}
 
 #Add Exchange 2007 snapin if not already loaded in the PowerShell session
-if (!(Get-PSSnapin | where {$_.Name -eq "Microsoft.Exchange.Management.PowerShell"}))
+if (!(Get-PSSnapin | where {$_.Name -eq "Microsoft.Exchange.Management.PowerShell.Admin"}))
 {
 	Write-Verbose $initstring1
 	if ($Log) {Write-Logfile $initstring1}
 	try
 	{
-		Add-PSSnapin Microsoft.Exchange.Management.PowerShell -ErrorAction STOP
+		Add-PSSnapin Microsoft.Exchange.Management.PowerShell.Admin -ErrorAction STOP
 	}
 	catch
 	{
