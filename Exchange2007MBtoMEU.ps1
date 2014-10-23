@@ -1,6 +1,41 @@
 ﻿<#
 .SYNOPSIS
 Exchange2007MBtoMEU.ps1
+
+.NOTES
+
+                                         *** Disclamer ***
+
+The sample scripts are not supported under any Microsoft standard support program or service. The sample
+scripts are provided AS IS without warranty of any kind. Microsoft further disclaims all implied warranties
+including, without limitation, any implied warranties of merchantability or of fitness for a particular
+purpose. The entire risk arising out of the use or performance of the sample scripts and documentation
+remains with you. In no event shall Microsoft, its authors, or anyone else involved in the creation,
+production, or delivery of the scripts be liable for any damages whatsoever (including, without limitation,
+damages for loss of business profits, business interruption, loss of business information, or other
+pecuniary loss) arising out of the use of or inability to use the sample scripts or documentation, even
+if Microsoft has been advised of the possibility of such damages.
+
+Original script by: Microsoft
+
+Modified by: Paul Cunningham
+
+For more Exchange Server tips, tricks and news
+check out Exchange Server Pro.
+
+* Website:	http://exchangeserverpro.com
+* Twitter:	http://twitter.com/exchservpro
+
+Find me on:
+
+* My Blog:	http://paulcunningham.me
+* Twitter:	https://twitter.com/paulcunningham
+* LinkedIn:	http://au.linkedin.com/in/cunninghamp/
+* Github:	https://github.com/cunninghamp
+
+Change Log:
+V1.00, 23/10/2014 - Initial version
+
 #>
 
 #requires -version 2
