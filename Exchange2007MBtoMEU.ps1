@@ -18,6 +18,9 @@ if Microsoft has been advised of the possibility of such damages.
 
 Original script by: Microsoft
 
+* URL:          http://community.office365.com/en-us/f/183/t/16717.aspx
+* Instructions: http://community.office365.com/en-us/w/exchange/845.convert-exchange-2007-mailboxes-to-mail-enabled-users-after-a-staged-exchange-migration.aspx
+
 Modified by: Paul Cunningham
 
 For more Exchange Server tips, tricks and news
