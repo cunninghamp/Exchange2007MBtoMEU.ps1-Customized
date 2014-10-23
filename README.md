@@ -6,7 +6,7 @@ A customized version of Microsoft's Exchange2007MBtoMEU.ps1 for Office 365 migra
 Usage instructions by Microsoft:
 http://community.office365.com/en-us/w/exchange/845.convert-exchange-2007-mailboxes-to-mail-enabled-users-after-a-staged-exchange-migration.aspx
 
-I have added logging output and some error handling to assist with running this script in production environments.
+I have added logging output and some error handling to increase visibility of the changes made by the script when it runs.
 
 Original script is located at:
 http://community.office365.com/en-us/f/183/t/16717.aspx
